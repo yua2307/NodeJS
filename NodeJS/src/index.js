@@ -16,11 +16,13 @@ app.engine('.hbs', exphbs({
   extname: '.hbs',
 }));
 app.set('view engine', '.hbs');
+
 app.set('views', path.join(__dirname, 'resources/views'));
 
 app.get(["/home", "/"], (req, res) => {
   return res.render('home');
 })
+
 app.get(["/news", "/"], (req, res) => {
   return res.render('news');
 })
