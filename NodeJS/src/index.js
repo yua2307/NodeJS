@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const morgan = require('morgan');
-
+const methodOverride = require('method-override')
 const exphbs = require('express-handlebars');
 const route = require('./routes');
 // HTTP logger
@@ -21,9 +21,17 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
+
 //  template engine
 app.engine('.hbs', exphbs({
   extname: '.hbs',
+  helpers: {
+    sum: function (a, b) {
+      return a + b;
+    }
+  }
 }));
 app.set('view engine', '.hbs');
 

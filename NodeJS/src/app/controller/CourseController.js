@@ -6,27 +6,59 @@ const {
 
 class CourseController {
 
-    show(req, res, next) {
+    showDetail(req, res, next) {
 
-        // console.log(req.params.slug);
+        Course.findOne({ slug: req.params.slug })
+            .then((course) => {
+                res.render('courses/show', {
+                    course: mongooseToObject(course),
+                })
+            })
+            .catch(next);
+    }
+    // [GET] /courses/create
+    create(req, res, next) {
+        res.render('courses/create');
+    }
 
-        // Course.findOne({ "slug": "html-css" })
-        //     .then((course) => {
+    edit(req, res, next) {
 
-        //         console.log(course)
-        //         res.json(course)
-        //     })
-        //     .catch(next);
-        // res.send(req.params.slug);
+        Course.findById({ _id: req.params.id })
+            .then((course) => {
+                res.render('courses/edit', {
+                    course: mongooseToObject(course),
+                })
+            })
 
-        const query = Course.findOne({ "slug": "html-css" })
-        query.exec(function (err, course) {
-            if (err) console.log(err);
-            else {
-                res.json(course)
-            }
+    }
 
-        });
+    update(req, res, next) {
+        Course.findByIdAndUpdate({ _id: req.params.id }, req.body)
+            .then(() => res.redirect('/me/storedCourses'))
+            .catch(next);
+    }
+
+    // [DELETE] 
+    destroy(req, res, next) {
+
+        /// console.log('Arrives')
+        Course.deleteOne({ _id: req.params.id })
+            .then(() => res.redirect('back'))
+            .catch(next);
+    }
+
+
+
+    // [POST] /courses/store
+    store(req, res, next) {
+        const formData = req.body;
+        req.body.image = `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
+        const course = new Course(formData);
+        course.save()
+            .then(() => res.redirect('/'))
+            .catch(err => {
+
+            });
     }
 }
 
