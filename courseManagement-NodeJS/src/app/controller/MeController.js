@@ -8,10 +8,19 @@ class MeController {
 
 
 
-    // [GET] /me/stored/courses
+    // [GET] /me/storedCourses
     storedCourses(req, res, next) {
+        // res.json(res.locals._sort);
+        let courseQuery = Course.find({});
 
-        Promise.all([Course.find(), Course.countDocumentsDeleted(),])
+        req.query.column
+        if (req.query.hasOwnProperty('_sort')) {
+            courseQuery.sort({
+                [req.query.column]: req.query.type
+            });
+        }
+
+        Promise.all([courseQuery, Course.countDocumentsDeleted(),])
             .then(([courses, deletedCount]) => {
                 res.render('me/stored-courses', {
                     courses: multipleMongooseToObject(courses),

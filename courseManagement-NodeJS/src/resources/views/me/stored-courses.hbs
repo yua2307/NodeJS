@@ -21,9 +21,18 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">STT</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Level</th>
-                <th scope="col" colspan="2">Time of Course</th>
+                <th scope="col">
+                    Course Name
+                    {{{sortable 'name' _sort}}}
+                </th>
+                <th scope="col">
+                    Level
+                    {{{sortable 'level' _sort}}}
+                </th>
+                <th scope="col" colspan="2">
+                    Time of Course
+                    {{{sortable 'createdAt' _sort}}}
+                </th>
             </tr>
         </thead>
         <tbody>
