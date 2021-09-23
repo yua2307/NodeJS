@@ -10,8 +10,6 @@ function route(app) {
     app.use('/courses', coursesRouter);
     app.use('/me', meRouter)
     app.use('/', siteRouter)
-
-
 }
 
 

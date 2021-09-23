@@ -35,10 +35,19 @@
                     <input type="checkbox" class="form-check-input" name="courseIds[]" value="{{this._id}}">
                 </div>
             </td>
-            <td scope="row">{{ sum @index 1}}</td>
-            <td>{{this.name}}</td>
-            <td>{{this.level}}</td>
-            <td>{{this.deletedAt}}</td>
+            <td scope="row">
+                {{ sum @index 1}}
+
+            </td>
+            <td>{{this.name}}
+
+            </td>
+            <td>{{this.level}}
+
+            </td>
+            <td>{{this.deletedAt}}
+
+            </td>
             <td>
                 <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
                 <button class="btn btn-link" data-id="{{this._id}}" data-bs-toggle="modal"
