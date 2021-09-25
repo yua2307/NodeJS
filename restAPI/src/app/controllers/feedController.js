@@ -1,52 +1,77 @@
 const { validationResult } = require('express-validator/check');
+const Post = require('../models/post');
+
 
 class FeedController {
 
     // GET /feeds/showAll
     getPosts(req, res, next) {
-        res.status(200).json({
-            posts: [
-                {
-                    _id: '1',
-                    title: 'First Post',
-                    content: 'this is out first post',
-                    imageUrl: '/public/img/f8logo.jpeg',
-                    creator: {
-                        name: 'Van Chinh'
-                    },
-                    createdAt: new Date()
+        Post.find()
+            .then(posts => {
+                res.status(200).json({ message: "get post sucessfully ", posts: posts });
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
                 }
-            ]
-        })
-    }
-    // POST /feeds/create
+                next(err);
+            });
 
-    createPost(req, res, next) {
+    }
+
+    // POST /feeds/create
+    createPost(req, res, err) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(422)
-                .json({
-                    message: 'Validation failed , entered data is invalid',
-                    errors: errors.array()
-                });
+            const error = new Error('Validtion failed , entered data is incorrect');
+            error.statusCode = 422;
+            throw error;
         }
         const title = req.body.title;
         const content = req.body.content;
-        console.log(title, content);
+        const post = new Post({
+            title,
+            content,
+            imageUrl: 'public/img/fanLiver.jpeg',
+            creator: { name: 'Van Chinh' },
+        });
+        post.save()
+            .then((result) => {
+                console.log(result);
+                return res.status(201).json({
+                    message: 'Create successfully',
+                    post: result
+                });
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+    }
 
-        console.log(req.body._id);
-        res.status(201).json({
-            message: 'Create successfully ',
-            post: {
-                _id: new Date().toISOString(),
-                title: title,
-                content: content,
-                creator: {
-                    name: 'Van Chinh'
-                },
-                createdAt: new Date()
-            },
-        })
+    // GET /feeds/:postId
+    showDetail(req, res, next) {
+
+        const postId = req.params.postId;
+        console.log('POST ID' + postId);
+        Post.findById(postId)
+            .then(post => {
+                if (!post) {
+                    const error = new Error('Could not find post');
+                    error.status = 404;
+                    throw error;
+                }
+                res.status(200).json({ message: 'Get Single Post', post: post });
+            })
+            .catch(err => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+
     }
 }
 
